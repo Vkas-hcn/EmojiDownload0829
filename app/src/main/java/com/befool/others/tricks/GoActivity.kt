@@ -12,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import com.befool.others.tricks.databinding.ActivityGuideBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.jvm.java
 
 class GuideActivity : AppCompatActivity() {
     private val binding by lazy { ActivityGuideBinding.inflate(layoutInflater) }
@@ -33,12 +32,13 @@ class GuideActivity : AppCompatActivity() {
 
     private fun startCountdown() {
         lifecycleScope.launch {
-            delay(2010L)
+            // 将2010ms分成100份，每份约20ms
+            for (i in 0..100) {
+                binding.progressBar.progress = i
+                delay(20)
+            }
             startActivity(Intent(this@GuideActivity, MainActivity::class.java))
             finish()
         }
-
     }
-
-
 }

@@ -36,11 +36,10 @@
         android:layout_height="8dp"
         android:layout_marginHorizontal="33dp"
         android:layout_marginBottom="65dp"
-        android:indeterminate="true"
         android:progress="50"
-        app:indicatorColor="#26FFCC00"
+        app:indicatorColor="#FFC701"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:trackColor="#FFC701"
+        app:trackColor="#26FFCC00"
         app:trackCornerRadius="36dp"
         app:trackThickness="8dp" />
 
