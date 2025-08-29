@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.befool.others.tricks.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -23,67 +24,39 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         this.supportActionBar?.hide()
-        click()
+        setupRecyclerView()
+        setupClickListeners()
     }
 
-    private fun click() {
+    private fun setupRecyclerView() {
+        val emojiSets = listOf(
+            EmojiSet("love", "Lover Emoji", ImageDataCon.iconLover),
+            EmojiSet("qi", "Penguin people Emoji", ImageDataCon.iconQi),
+            EmojiSet("emoji", "Funny Emoji", ImageDataCon.iconEmoji),
+            EmojiSet("cute", "Cute Emoji", ImageDataCon.iconCute),
+            EmojiSet("cat", "Cat Emoji", ImageDataCon.iconCat),
+            EmojiSet("line", "Line Emoji", ImageDataCon.iconLine),
+            EmojiSet("bullet", "Bullet Emoji", ImageDataCon.iconBullet)
+        )
+
+        val adapter = MainAdapter(emojiSets) { emojiType, title ->
+            val intent = Intent(this, EmojiListActivity::class.java)
+            intent.putExtra("emoji_type", emojiType)
+            intent.putExtra("title", title)
+            startActivity(intent)
+        }
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun setupClickListeners() {
         onBackPressedDispatcher.addCallback {
             finish()
         }
 
-        binding.apply {
-            textView.setOnClickListener {
-                startActivity(Intent(this@MainActivity, PrivacyActivity::class.java))
-            }
-
-            findViewById<LinearLayout>(R.id.layout_love)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "love")
-                intent.putExtra("title", "Lover Emoji")
-                startActivity(intent)
-            }
-
-            findViewById<LinearLayout>(R.id.layout_qi)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "qi")
-                intent.putExtra("title", "Penguin people Emoji")
-                startActivity(intent)
-            }
-
-            findViewById<LinearLayout>(R.id.layout_emoji)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "emoji")
-                intent.putExtra("title", "Funny Emoji")
-                startActivity(intent)
-            }
-
-            findViewById<LinearLayout>(R.id.layout_cute)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "cute")
-                intent.putExtra("title", "Cute Emoji")
-                startActivity(intent)
-            }
-
-            findViewById<LinearLayout>(R.id.layout_cat)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "cat")
-                intent.putExtra("title", "Cat Emoji")
-                startActivity(intent)
-            }
-
-            findViewById<LinearLayout>(R.id.layout_line)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "line")
-                intent.putExtra("title", "Line Emoji")
-                startActivity(intent)
-            }
-
-            findViewById<LinearLayout>(R.id.layout_bullet)?.setOnClickListener {
-                val intent = Intent(this@MainActivity, EmojiListActivity::class.java)
-                intent.putExtra("emoji_type", "bullet")
-                intent.putExtra("title", "Bullet Emoji")
-                startActivity(intent)
-            }
+        binding.textView.setOnClickListener {
+            startActivity(Intent(this, NetGoActivity::class.java))
         }
     }
 }

@@ -12,7 +12,7 @@ import com.befool.others.tricks.databinding.ActivityPrivacyBinding
 import kotlin.apply
 
 
-class PrivacyActivity : AppCompatActivity() {
+class NetGoActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityPrivacyBinding.inflate(layoutInflater) }
 
@@ -33,7 +33,7 @@ class PrivacyActivity : AppCompatActivity() {
             atvShare.setOnClickListener {
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=${this@PrivacyActivity.packageName}")
+                intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=${this@NetGoActivity.packageName}")
                 try {
                     startActivity(Intent.createChooser(intent, "Share via"))
                 } catch (ex: Exception) {
