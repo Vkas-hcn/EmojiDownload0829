@@ -41,7 +41,6 @@ class MainAdapter(
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val emojiSet = emojiSets[position]
 
-        // 显示每个表情包集合的第一张图片
         val firstImage = emojiSet.imageList.firstOrNull()
         if (firstImage != null) {
             when (firstImage) {

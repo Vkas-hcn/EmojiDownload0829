@@ -32,7 +32,6 @@ class GuideActivity : AppCompatActivity() {
 
     private fun startCountdown() {
         lifecycleScope.launch {
-            // 将2010ms分成100份，每份约20ms
             for (i in 0..100) {
                 binding.progressBar.progress = i
                 delay(20)

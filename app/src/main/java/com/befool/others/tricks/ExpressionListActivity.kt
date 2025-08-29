@@ -120,8 +120,9 @@ class EmojiListActivity : AppCompatActivity() {
         }
     }
 
-    // 使用解构声明简化属性定义
-    private var (emojiType: String, titleText: String) = "" to ""
+    // 单独声明属性
+    private var emojiType: String = ""
+    private var titleText: String = ""
 
     // 策略模式：权限处理
     private val permissionStrategy: PermissionStrategy by lazy {
@@ -303,18 +304,17 @@ class EmojiListActivity : AppCompatActivity() {
     }
 
     // 策略模式：文件保存处理
-    private suspend fun performSingleDownload(imageResource: ImageResource, fileName: String): Boolean =
-        withContext(Dispatchers.IO) {
-            try {
-                when (imageResource) {
-                    is ImageResource.DrawableRes -> saveDrawableToStorage(imageResource.drawableId, fileName)
-                    is ImageResource.GifAsset -> saveGifToStorage(imageResource.gifPath, fileName)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
+    private fun performSingleDownload(imageResource: ImageResource, fileName: String): Boolean {
+        return try {
+            when (imageResource) {
+                is ImageResource.DrawableRes -> saveDrawableToStorage(imageResource.drawableId, fileName)
+                is ImageResource.GifAsset -> saveGifToStorage(imageResource.gifPath, fileName)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
+    }
 
     // 函数式风格：文件保存逻辑
     private fun saveDrawableToStorage(drawableId: Int, fileName: String): Boolean {
@@ -356,8 +356,8 @@ class EmojiListActivity : AppCompatActivity() {
         inputStream: InputStream? = null,
         filename: String,
         mimeType: String,
-        compressAction: ((java.io.OutputStream) -> Unit)? = null,
-        copyAction: ((java.io.OutputStream) -> Unit)? = null
+        noinline compressAction: ((java.io.OutputStream) -> Unit)? = null,
+        noinline copyAction: ((java.io.OutputStream) -> Unit)? = null
     ): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             saveToModernMediaStore(filename, mimeType, compressAction, copyAction)
@@ -369,8 +369,8 @@ class EmojiListActivity : AppCompatActivity() {
     private inline fun saveToModernMediaStore(
         filename: String,
         mimeType: String,
-        compressAction: ((java.io.OutputStream) -> Unit)?,
-        copyAction: ((java.io.OutputStream) -> Unit)?
+        noinline compressAction: ((java.io.OutputStream) -> Unit)?,
+        noinline copyAction: ((java.io.OutputStream) -> Unit)?
     ): Boolean {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
@@ -392,8 +392,8 @@ class EmojiListActivity : AppCompatActivity() {
         mimeType: String,
         bitmap: Bitmap?,
         inputStream: InputStream?,
-        compressAction: ((java.io.OutputStream) -> Unit)?,
-        copyAction: ((java.io.OutputStream) -> Unit)?
+        noinline compressAction: ((java.io.OutputStream) -> Unit)?,
+        noinline copyAction: ((java.io.OutputStream) -> Unit)?
     ): Boolean {
         val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val file = File(picturesDir, filename)

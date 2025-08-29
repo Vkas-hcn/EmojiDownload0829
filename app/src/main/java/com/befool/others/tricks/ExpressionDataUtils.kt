@@ -1,15 +1,10 @@
 package com.befool.others.tricks
 
-import kotlin.sequences.asSequence
-
-// 使用密封接口替代密封类，并添加操作符重载
 sealed interface ImageResource {
     val identifier: String
 
-    // 操作符重载：加法运算用于合并资源信息
     operator fun plus(suffix: String): String = "${identifier}_$suffix"
 
-    // 操作符重载：索引访问
     operator fun get(key: String): String = when(key) {
         "type" -> when(this) {
             is DrawableRes -> "drawable"
@@ -32,23 +27,6 @@ sealed interface ImageResource {
         override val identifier: String get() = "gif_${gifPath.hashCode()}"
     }
 }
-
-// 策略模式：资源加载策略
-sealed interface ResourceLoadStrategy {
-    fun loadResource(resource: ImageResource): String
-
-    object DrawableStrategy : ResourceLoadStrategy {
-        override fun loadResource(resource: ImageResource): String =
-            (resource as ImageResource.DrawableRes).drawableId.toString()
-    }
-
-    object GifStrategy : ResourceLoadStrategy {
-        override fun loadResource(resource: ImageResource): String =
-            "file:///android_asset/${(resource as ImageResource.GifAsset).gifPath}"
-    }
-}
-
-// 建造者模式：资源集合构建器
 class ResourceCollectionBuilder private constructor() {
     private val resourceList = mutableListOf<ImageResource>()
 
@@ -77,22 +55,13 @@ class ResourceCollectionBuilder private constructor() {
     }
 }
 
-// 函数式风格重构数据容器
 object ImageDataCon {
 
-    // 使用高阶函数生成资源序列
     private inline fun gifSequence(prefix: String, count: Int): Sequence<ImageResource> =
         (1..count).asSequence()
             .map { "gifs/${prefix}_$it.gif" }
             .map(ImageResource::GifAsset)
 
-    private inline fun drawableSequence(prefix: String, ids: IntArray): Sequence<ImageResource> =
-        ids.asSequence().map { resourceId ->
-            // 使用反射动态获取资源ID（模拟实际使用）
-            ImageResource.DrawableRes(resourceId)
-        }
-
-    // 函数式风格重构资源列表
     @get:JvmName("getIconLover")
     val iconLover: List<ImageResource> by lazy {
         gifSequence("ic_love", 4).toList()
@@ -117,28 +86,33 @@ object ImageDataCon {
 
     @get:JvmName("getIconCute")
     val iconCute: List<ImageResource> by lazy {
-        sequence {
-            yield(ImageResource.DrawableRes(R.drawable.ic_cute_1))
-            yield(ImageResource.GifAsset("gifs/ic_cute_2.gif"))
-            yieldAll(
-                sequenceOf(3, 4, 5, 6, 7, 8).map {
-                    ImageResource.DrawableRes(getResourceId("ic_cute_$it"))
-                }
-            )
-            yield(ImageResource.GifAsset("gifs/ic_cute_9.gif"))
-        }.toList()
+        buildList {
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_1))
+            add(ImageResource.GifAsset("gifs/ic_cute_2.gif"))
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_3))
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_4))
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_5))
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_6))
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_7))
+            add(ImageResource.DrawableRes(R.drawable.ic_cute_8))
+
+
+            add(ImageResource.GifAsset("gifs/ic_cute_9.gif"))
+        }
     }
 
     @get:JvmName("getIconCat")
     val iconCat: List<ImageResource> by lazy {
         buildList {
-            addAll(
-                sequenceOf(1, 2, 3, 6, 7, 8)
-                    .map { ImageResource.DrawableRes(getResourceId("ic_cat_$it")) }
-            )
+            add(ImageResource.DrawableRes(R.drawable.ic_cat_1))
+            add(ImageResource.DrawableRes(R.drawable.ic_cat_2))
+            add(ImageResource.DrawableRes(R.drawable.ic_cat_3))
             add(ImageResource.GifAsset("gifs/ic_cat_4.gif"))
             add(ImageResource.GifAsset("gifs/ic_cat_5.gif"))
-        }.shuffled().sorted()
+            add(ImageResource.DrawableRes(R.drawable.ic_cat_6))
+            add(ImageResource.DrawableRes(R.drawable.ic_cat_7))
+            add(ImageResource.DrawableRes(R.drawable.ic_cat_8))
+        }
     }
 
     @get:JvmName("getIconLine")
@@ -175,19 +149,4 @@ object ImageDataCon {
 
     // 操作符重载：允许通过索引访问资源类型
     operator fun get(type: String): List<ImageResource> = getResourcesByType(type)
-
-    // 辅助函数：模拟资源ID获取
-    private fun getResourceId(name: String): Int =
-        name.hashCode().let { if (it < 0) -it else it } % 100000
 }
-
-// 扩展函数：为List添加差异化操作
-fun List<ImageResource>.filterByType(predicate: (ImageResource) -> Boolean): Sequence<ImageResource> =
-    asSequence().filter(predicate)
-
-// 操作符重载：为ImageResource添加比较操作
-private fun ImageResource.compareTo(other: ImageResource): Int =
-    this.identifier.compareTo(other.identifier)
-
-private fun List<ImageResource>.sorted(): List<ImageResource> =
-    sortedWith { a, b -> a.identifier.compareTo(b.identifier) }
