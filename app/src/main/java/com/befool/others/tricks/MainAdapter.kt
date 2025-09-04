@@ -45,14 +45,14 @@ class MainAdapter(
         if (firstImage != null) {
             when (firstImage) {
                 is ImageResource.DrawableRes -> {
-                    Glide.with(holder.itemView.context)
+                    Glide.with(MyAppGlideModule.instance)
                         .load(firstImage.drawableId)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.emojiImage)
                 }
                 is ImageResource.GifAsset -> {
-                    Glide.with(holder.itemView.context)
+                    Glide.with(MyAppGlideModule.instance)
                         .asGif()
                         .load("file:///android_asset/${firstImage.gifPath}")
                         .diskCacheStrategy(DiskCacheStrategy.DATA)

@@ -41,9 +41,8 @@ class NetGoActivity : AppCompatActivity() {
                 }
             }
             atvPlo.setOnClickListener {
-                //TODO
                 val intent = Intent(Intent .ACTION_VIEW)
-                intent.data = "https://www.google.com/".toUri()
+                intent.data = "https://sites.google.com/view/emoji-magic/home".toUri()
                 startActivity(intent)
             }
         }
