@@ -62,90 +62,72 @@ object ImageDataCon {
             .map { "gifs/${prefix}_$it.gif" }
             .map(ImageResource::GifAsset)
 
-    @get:JvmName("getIconLover")
-    val iconLover: List<ImageResource> by lazy {
-        gifSequence("ic_love", 4).toList()
-    }
-
-    @get:JvmName("getIconQi")
-    val iconQi: List<ImageResource> by lazy {
-        ResourceCollectionBuilder.create()
-            .addDrawable(
-                R.drawable.ic_qi_1, R.drawable.ic_qi_2, R.drawable.ic_qi_3,
-                R.drawable.ic_qi_4, R.drawable.ic_qi_5, R.drawable.ic_qi_6,
-                R.drawable.ic_qi_7
-            )
-            .build()
-            .toList()
-    }
-
+    private inline fun jpgSequence(prefix: String, count: Int): Sequence<ImageResource> =
+        (1..count).asSequence()
+            .map { "gifs/${prefix}_$it.jpg" }
+            .map(ImageResource::GifAsset)
     @get:JvmName("getIconEmoji")
     val iconEmoji: List<ImageResource> by lazy {
-        gifSequence("ic_emoji", 6).toList()
+        gifSequence("emoji", 11).toList()
+    }
+    @get:JvmName("getIconBox")
+    val iconBox: List<ImageResource> by lazy {
+        gifSequence("box", 8).toList()
     }
 
+    @get:JvmName("getIconDog")
+    val iconDog: List<ImageResource> by lazy {
+        gifSequence("dog", 6).toList()
+    }
+
+    @get:JvmName("getIconFace")
+    val iconFace: List<ImageResource> by lazy {
+        gifSequence("face", 9).toList()
+
+    }
     @get:JvmName("getIconCute")
     val iconCute: List<ImageResource> by lazy {
-        buildList {
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_1))
-            add(ImageResource.GifAsset("gifs/ic_cute_2.gif"))
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_3))
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_4))
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_5))
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_6))
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_7))
-            add(ImageResource.DrawableRes(R.drawable.ic_cute_8))
-
-
-            add(ImageResource.GifAsset("gifs/ic_cute_9.gif"))
-        }
+        gifSequence("cute", 9).toList()
     }
 
     @get:JvmName("getIconCat")
     val iconCat: List<ImageResource> by lazy {
-        buildList {
-            add(ImageResource.DrawableRes(R.drawable.ic_cat_1))
-            add(ImageResource.DrawableRes(R.drawable.ic_cat_2))
-            add(ImageResource.DrawableRes(R.drawable.ic_cat_3))
-            add(ImageResource.GifAsset("gifs/ic_cat_4.gif"))
-            add(ImageResource.GifAsset("gifs/ic_cat_5.gif"))
-            add(ImageResource.DrawableRes(R.drawable.ic_cat_6))
-            add(ImageResource.DrawableRes(R.drawable.ic_cat_7))
-            add(ImageResource.DrawableRes(R.drawable.ic_cat_8))
-        }
-    }
-
-    @get:JvmName("getIconLine")
-    val iconLine: List<ImageResource> by lazy {
-        generateSequence(1) { it + 1 }
-            .take(9)
-            .map { "gifs/ic_line_$it.gif" }
-            .map(ImageResource::GifAsset)
+        ResourceCollectionBuilder.create()
+            .addDrawable(
+                R.drawable.cat_1,
+                R.drawable.cat_2,
+                R.drawable.cat_3,
+                R.drawable.cat_4,
+                R.drawable.cat_5,
+                R.drawable.cat_6,
+                R.drawable.cat_7,
+                R.drawable.cat_8,
+                R.drawable.cat_9,
+            )
+            .build()
             .toList()
     }
+    @get:JvmName("getIconPat")
+    val iconPat: List<ImageResource> by lazy {
+        gifSequence("paw", 11).toList()
 
-    @get:JvmName("getIconBullet")
-    val iconBullet: List<ImageResource> by lazy {
-        (1..8).asSequence()
-            .map { idx -> "gifs/ic_bullet_$idx.gif" }
-            .map(ImageResource::GifAsset)
-            .toList()
     }
+
 
     // 策略模式：根据类型获取资源列表
     private val resourceStrategies = mapOf<String, () -> List<ImageResource>>(
-        "love" to ::iconLover,
-        "qi" to ::iconQi,
         "emoji" to ::iconEmoji,
+        "iconBox" to ::iconBox,
+        "dog" to ::iconDog,
         "cute" to ::iconCute,
         "cat" to ::iconCat,
-        "line" to ::iconLine,
-        "bullet" to ::iconBullet
+        "face" to ::iconFace,
+        "paw" to ::iconPat
     )
 
     // 高阶函数：获取资源列表
     fun getResourcesByType(type: String): List<ImageResource> =
-        resourceStrategies[type]?.invoke() ?: iconLover
+        resourceStrategies[type]?.invoke() ?: iconBox
 
     // 操作符重载：允许通过索引访问资源类型
     operator fun get(type: String): List<ImageResource> = getResourcesByType(type)

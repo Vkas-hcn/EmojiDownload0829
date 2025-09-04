@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val emojiSets = listOf(
-            EmojiSet("love", "Lover Emoji", ImageDataCon.iconLover),
-            EmojiSet("qi", "Penguin people Emoji", ImageDataCon.iconQi),
             EmojiSet("emoji", "Funny Emoji", ImageDataCon.iconEmoji),
+            EmojiSet("box", "Boxing Emoji", ImageDataCon.iconBox),
+            EmojiSet("dog", "Dog Emoji", ImageDataCon.iconDog),
             EmojiSet("cute", "Cute Emoji", ImageDataCon.iconCute),
             EmojiSet("cat", "Cat Emoji", ImageDataCon.iconCat),
-            EmojiSet("line", "Line Emoji", ImageDataCon.iconLine),
-            EmojiSet("bullet", "Bullet Emoji", ImageDataCon.iconBullet)
+            EmojiSet("face", "Face Emoji", ImageDataCon.iconFace),
+            EmojiSet("paw", "Cat's Paw Emoji", ImageDataCon.iconPat)
         )
 
         val adapter = MainAdapter(emojiSets) { emojiType, title ->
